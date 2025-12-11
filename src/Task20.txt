@@ -1,0 +1,80 @@
+Практика #1: Использование this и super в подклассах
+
+this - ссылка на текущий объект (экземпляр класса):
+1. this.field - обращение к полю текущего класса
+2. this.method() - вызов метода текущего класса
+3. this() - вызов другого конструктора того же класса
+
+super - ссылка на родительский класс:
+1. super.field - обращение к полю родительского класса (даже если оно скрыто в подклассе)
+2. super.method() - вызов метода родительского класса (даже если он переопределен)
+3. super() - вызов конструктора родительского класса (должен быть первой строкой в конструкторе)
+
+Пример:
+class Parent {
+    String name = "Parent";
+
+    void print() {
+        System.out.println("Parent method");
+    }
+}
+
+class Child extends Parent {
+    String name = "Child";
+
+    void print() {
+        System.out.println("Child method");
+        super.print(); // вызывает метод Parent
+        System.out.println("this.name = " + this.name); // Child
+        System.out.println("super.name = " + super.name); // Parent
+    }
+}
+
+Практика #2: Изменение спецификаторов при наследовании
+
+class A {
+    int a1;           // default (package-private)
+    public int a2;    // public
+    protected int a3; // protected
+    private int a4;   // private
+
+    void method1() { ... }        // default
+    public void method2() { ... } // public
+    protected void method3() { ... } // protected
+    private void method4() { ... }   // private
+}
+
+class B extends A {
+    // Доступно из B:
+    // a1 - ДА (если B в том же пакете, что и A)
+    // a2 - ДА (public)
+    // a3 - ДА (protected)
+    // a4 - НЕТ (private)
+
+    // method1() - ДА (если B в том же пакете)
+    // method2() - ДА (public)
+    // method3() - ДА (protected)
+    // method4() - НЕТ (private)
+}
+
+class C extends B {
+    // Доступно из C:
+    // a1 - ДА (если C в том же пакете, что и A)
+    // a2 - ДА (public)
+    // a3 - ДА (protected - наследуется через B)
+    // a4 - НЕТ (private)
+
+    // method1() - ДА (если C в том же пакете, что и A)
+    // method2() - ДА (public)
+    // method3() - ДА (protected - наследуется через B)
+    // method4() - НЕТ (private)
+}
+
+Правила наследования:
+1. private - не наследуются вообще
+2. default - наследуются только в том же пакете
+3. protected - наследуются всегда (в том числе в других пакетах)
+4. public - наследуются всегда
+
+Важно: Наследование не означает, что подкласс имеет прямой доступ к private полям родителя.
+Подкласс может использовать public/protected методы родителя для доступа к его private данным.
